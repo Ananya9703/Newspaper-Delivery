@@ -1,0 +1,157 @@
+package assign9p;
+import java.util.*;
+class node{
+	int data;
+	node next;
+	node(int data){
+		this.data=data;
+		this.next=null;
+	}
+}
+public class graph{
+	Scanner sc=new Scanner(System.in);
+	static int house=0;
+	static int lane=0;
+	node head[]=new node[10];
+	int adjmat[][];
+	void adjmat() {
+		adjmat=new int[house][house];
+		for(int i=0;i<house;i++) {
+			for(int j=0;j<house;j++) {
+				adjmat[i][j]=0;
+			}
+		}
+		for(int i=0;i<lane;i++) {
+			System.out.println("Enter starting vertex:");
+			int u=sc.nextInt();
+			System.out.println("Enter ending vertex:");
+			int v=sc.nextInt();
+			adjmat[u][v]=1;
+			adjmat[v][u]=1;
+		}
+	}
+	void dispmat() {
+		for(int i=0;i<house;i++) {
+			for (int j=0;j<house;j++) {
+				System.out.print(adjmat[i][j]+" ");
+			}
+			System.out.println();
+		}
+	}
+	void adjlist() {
+		for(int i=0;i<lane;i++) {
+			System.out.println("Enter start vertex:");
+			int u=sc.nextInt();
+			System.out.println("Enter end vertex:");
+			int v=sc.nextInt();
+			insert(u,v);
+			insert(v,u);
+		}
+	}
+	void displist() {
+		System.out.println("Adjacency list:");
+		for(int i=0;i<house;i++) {
+			node temp=head[i];
+			System.out.print(i+" ");
+			while(temp!=null) {
+				System.out.print("-->"+temp.data);
+				temp=temp.next;
+			}
+			System.out.println();
+		}
+	}
+	void insert(int u, int v) {
+		node y=new node(v);
+		if(head==null) {
+			head[u]=y;
+		}
+		else {
+			node temp=head[u];
+			while(temp.next!=null) {
+				temp=temp.next;
+			}
+			temp.next=y;
+		}
+	}
+	void bfs() {
+		System.out.println("BFS TRAVERSAL:");
+		System.out.println("Enter source vertex:");
+		int sv=sc.nextInt();
+		int visited[]=new int[house];
+		for(int i=0;i<house;i++) {
+			visited[i]=0;
+		}
+		Queue <Integer> q=new LinkedList <>();
+		q.add(sv);
+		visited[sv]=1;
+		System.out.print(" "+sv);
+		while(q.size()>0) {
+			int tempind=q.remove();
+			node curr=head[tempind];
+			while(curr!=null) {
+				if(visited[curr.data]!=1) {
+					q.add(curr.data);
+					visited[curr.data]=1;
+					System.out.print(curr.data+" ");		
+				}
+				curr=curr.next;
+			}
+		}
+	}
+	void dfs() {
+		System.out.println("DFS TRAVERSAL:");
+		System.out.println("Enter source vertex:");
+		int sv=sc.nextInt();
+		int visited[]=new int[house];
+		Stack<Integer>st=new Stack<Integer>();
+		for(int i=0;i<house;i++) {
+			visited[i]=0;}
+		st.push(sv);
+		visited[sv]=1;
+		while(st.size()>0) {
+			int a=st.pop();
+			System.out.println(a+" ");
+			for(int i=0;i<house;i++) {
+				if(adjmat[a][i]==1 && visited[i]==0) {
+					st.push(i);
+					visited[i]=1;
+				}
+			}
+			
+		}
+	}
+
+
+	public static void main(String args[]) {
+		Scanner sc=new Scanner(System.in);
+		graph obj=new graph();
+		int ch;
+		System.out.println("Enter number of houses: ");
+		house=sc.nextInt();
+		System.out.println("Enter number of lanes:");
+		lane=sc.nextInt();
+		do {
+			System.out.println("Menu");
+			System.out.println("1. DFS using adjacency matrix");
+			System.out.println("2. BFS using adjacency list");
+			System.out.println("3.Exit");
+			System.out.println("Enter your choice");
+			ch=sc.nextInt();
+			switch(ch) {
+			case 1:
+				obj.adjmat();
+				obj.dispmat();
+				obj.dfs();
+				break;
+			case 2:
+				obj.adjlist();
+				obj.displist();
+				obj.bfs();
+				break;
+			case 3:
+				System.exit(3);
+				default:System.out.println("invalid choice");
+			}
+		}while(ch!=3);
+	}
+}
